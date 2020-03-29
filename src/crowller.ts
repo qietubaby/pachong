@@ -4,15 +4,20 @@ import superagent from 'superagent'
 import cheerio from 'cheerio'
 
 interface Course {
-  title: string
-  type: string
+  title: string;
+  type: string;
+}
+
+interface CourseResult {
+  time: number;
+  data: Course[];
 }
 
 class Crowller {
   private url = `http://www.kdxs.com/`
-  private rawHtml = ''
 
-  getJsonInfo(html: string) {
+
+  getCourseInfo(html: string) {
     const $ = cheerio.load(html)
     const courseItems = $('.pt-new-recomment-list li')
     const courseInfos: Course[] = []
@@ -33,17 +38,27 @@ class Crowller {
       data: courseInfos
     }
 
-    console.log(result)
+    return result
   }
 
+  // 获取html内容
   async getRawHtml() {
     const result = await superagent.get(this.url)
-    this.rawHtml = result.text
-    this.getJsonInfo(this.rawHtml)
+    return result.text
+  }
+
+  generateJsonContent(courseInfo: CourseResult) {
+    console.log(courseInfo)
+  }
+
+  async initSpiderProcess() {
+    const html = await this.getRawHtml()
+    const courseInfo = this.getCourseInfo(html);
+    this.generateJsonContent(courseInfo)
   }
 
   constructor() {
-    this.getRawHtml()
+    this.initSpiderProcess()
   }
 }
 
