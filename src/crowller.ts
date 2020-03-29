@@ -3,6 +3,9 @@ import superagent from 'superagent'
 
 import cheerio from 'cheerio'
 
+import fs from 'fs';
+import path from 'path';
+
 interface Course {
   title: string;
   type: string;
@@ -11,6 +14,10 @@ interface Course {
 interface CourseResult {
   time: number;
   data: Course[];
+}
+
+interface Content {
+  [propName: number]: Course[]
 }
 
 class Crowller {
@@ -48,7 +55,15 @@ class Crowller {
   }
 
   generateJsonContent(courseInfo: CourseResult) {
-    console.log(courseInfo)
+
+    const filePath = path.resolve(__dirname, '../data/course.json');
+    let fileContent: Content = {};
+    
+    if(fs.existsSync(filePath)) {
+      fileContent = JSON.parse(fs.readFileSync(filePath,'utf-8'));
+    }
+    fileContent[courseInfo.time] = courseInfo.data;
+    fs.writeFileSync(filePath, JSON.stringify(fileContent));
   }
 
   async initSpiderProcess() {
