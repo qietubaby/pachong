@@ -4,13 +4,16 @@ import fs from 'fs'
 import path from 'path'
 import Analyze from './analyzer'
 
+export interface Analyzer {
+  analyze: (html: string, filePath: string) => string
+}
+
 class Crowller {
-  private url = `http://www.kdxs.com/`
   private filePath = path.resolve(__dirname, '../data/course.json')
 
   // 获取html内容
   async getRawHtml() {
-    const result = await superagent.get(this.url)
+    const result = await superagent.get(url)
     return result.text
   }
 
@@ -24,11 +27,12 @@ class Crowller {
     this.writeFile(JSON.stringify(fileContent))
   }
 
-  constructor(private analyzer: any) {
+  constructor(private url: string, private analyzer: Analyzer) {
     this.initSpiderProcess()
   }
 }
 
-const analyzer = new Analyze()
+const url = `http://www.kdxs.com/`
 
-const crowller = new Crowller(analyzer)
+const analyzer = new Analyze()
+new Crowller(url, analyzer)

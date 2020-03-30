@@ -1,5 +1,7 @@
 import cheerio from 'cheerio'
 import fs from 'fs'
+import { Analyzer } from './crowller'
+
 interface Course {
   title: string
   type: string
@@ -14,7 +16,7 @@ interface Content {
   [propName: number]: Course[]
 }
 
-class Analyzer {
+class Analyzer implements Analyzer {
   private getCourseInfo(html: string) {
     const $ = cheerio.load(html)
     const courseItems = $('.pt-new-recomment-list li')
