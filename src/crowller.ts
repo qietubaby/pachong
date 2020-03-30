@@ -54,6 +54,8 @@ class Crowller {
     return result.text
   }
 
+
+  // 存储到本地
   generateJsonContent(courseInfo: CourseResult) {
 
     const filePath = path.resolve(__dirname, '../data/course.json');
@@ -63,13 +65,17 @@ class Crowller {
       fileContent = JSON.parse(fs.readFileSync(filePath,'utf-8'));
     }
     fileContent[courseInfo.time] = courseInfo.data;
-    fs.writeFileSync(filePath, JSON.stringify(fileContent));
+    return fileContent;
+    
   }
 
   async initSpiderProcess() {
+    const filePath = path.resolve(__dirname, '../data/course.json');
     const html = await this.getRawHtml()
     const courseInfo = this.getCourseInfo(html);
-    this.generateJsonContent(courseInfo)
+    const fileContent = this.generateJsonContent(courseInfo)
+    fs.writeFileSync(filePath, JSON.stringify(fileContent));
+
   }
 
   constructor() {
