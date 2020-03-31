@@ -4,7 +4,7 @@ import fs from 'fs'
 import path from 'path'
 import Analyze from './analyzer'
 
-export interface Analyzer {
+export interface Analyzerr {
   analyze: (html: string, filePath: string) => string
 }
 
@@ -12,27 +12,27 @@ class Crowller {
   private filePath = path.resolve(__dirname, '../data/course.json')
 
   // 获取html内容
-  async getRawHtml() {
+  private async getRawHtml() {
     const result = await superagent.get(url)
     return result.text
   }
 
-  writeFile(content: string) {
+  private writeFile(content: string) {
     fs.writeFileSync(this.filePath, content)
   }
 
-  async initSpiderProcess() {
+  private async initSpiderProcess() {
     const html = await this.getRawHtml()
     const fileContent = this.analyzer.analyze(html, this.filePath)
-    this.writeFile(JSON.stringify(fileContent))
+    this.writeFile(fileContent)
   }
 
-  constructor(private url: string, private analyzer: Analyzer) {
+  constructor(private url: string, private analyzer: Analyzerr) {
     this.initSpiderProcess()
   }
 }
 
 const url = `http://www.kdxs.com/`
 
-const analyzer = new Analyze()
+const analyzer = Analyze.getInstance()
 new Crowller(url, analyzer)
