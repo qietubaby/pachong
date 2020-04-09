@@ -2,7 +2,7 @@
 import superagent from 'superagent'
 import fs from 'fs'
 import path from 'path'
-import Analyze from './analyzer'
+const url = `http://www.kdxs.com/`;
 
 export interface Analyzerr {
   analyze: (html: string, filePath: string) => string
@@ -32,7 +32,7 @@ class Crowller {
   }
 }
 
-const url = `http://www.kdxs.com/`
+export default Crowller
 
-const analyzer = Analyze.getInstance()
-new Crowller(url, analyzer)
+
+
